@@ -114,32 +114,7 @@
               style="width: 300px;"
             ></b-form-input>
             <br />
-            <span v-if="findtransportations.length">
-              <b-table
-                striped
-                hover
-                :items="findtransportations"
-                :fields="fields"
-              >
-                <template v-slot:cell(action)="data">
-                  <b-button
-                    size="sm"
-                    variant="success"
-                    v-on:click="Order(data.item)"
-                    v-b-modal.modalOrder
-                    ><i class="mdi mdi-train"></i> Order</b-button
-                  >
-                </template>
-              </b-table>
-              <b-pagination
-                v-model="currentPage"
-                :per-page="perPage"
-                :total-rows="rows"
-                align="center"
-                v-on:input="pagination"
-              >
-              </b-pagination>
-            </span>
+
           </div>
         </form>
       </div>
@@ -199,7 +174,37 @@
       </form>
     </b-modal>
   </div>
+  <div class="container mt-5 shadow rounded p-0">
 
+            <span v-if="findtransportations.length">
+              <b-table
+                class="mt-5"
+                striped
+                hover
+                :items="findtransportations"
+                :fields="fields"
+              >
+                <template v-slot:cell(action)="data">
+                  <b-button
+                    size="sm"
+                    variant="success"
+                    v-on:click="Order(data.item)"
+                    v-b-modal.modalOrder
+                    ><i class="mdi mdi-train"></i> Order</b-button
+                  >
+                </template>
+              </b-table>
+              <b-pagination
+                v-model="currentPage"
+                :per-page="perPage"
+                :total-rows="rows"
+                align="center"
+                v-on:input="pagination"
+                class="pb-4"
+              >
+              </b-pagination>
+            </span>
+  </div>
 
                   <!-- Top Picks Start -->
     <section id="whyTripket">
