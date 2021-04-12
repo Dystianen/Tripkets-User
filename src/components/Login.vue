@@ -62,35 +62,6 @@
           </div>
         </div>
       </div>
-            <b-modal id="modalRegister" @ok="Save">
-        <template v-slot:modal-title> Form Register </template>
-        <form ref="form">
-          <div class="form-group">
-            <label for="nik" class="col-form-label">NIK</label>
-            <input type="number" name="nik" class="form-control" id="nik" placeholder="nik" v-model="nik" />
-          </div>
-          <div class="form-group">
-            <label for="name" class="col-form-label">Name</label>
-            <input type="text" name="name" class="form-control" id="name" placeholder="name" v-model="name" />
-          </div>
-          <div class="form-group">
-            <label for="email" class="col-form-label">Username</label>
-            <input type="text" name="email" class="form-control" id="email" placeholder="email" v-model="email" />
-          </div>
-          <div class="form-group">
-            <label for="password" class="col-form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="password" placeholder="password" v-model="password" />
-          </div>
-          <div class="form-group">
-            <label for="phone_number" class="col-form-label">Phone Number</label>
-            <input type="number" name="phone_number" class="form-control" id="phone_number" placeholder="telepon" v-model="phone_number" />
-          </div>
-          <div class="form-group">
-            <label for="location" class="col-form-label">Location</label>
-            <input type="text" name="location" class="form-control" id="location" placeholder="location" v-model="location" />
-          </div>
-        </form>
-      </b-modal>
     </div>
 
     <b-toast id="loadingToast" title="Processing Data" no-auto-hide>

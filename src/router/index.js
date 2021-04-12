@@ -11,6 +11,8 @@ import Footer from '../components/layouts/Footer.vue'
 //ROUTE USER
 import Home from '../components/user/Home.vue'
 import Kereta from '../components/user/Kereta.vue'
+import Bus from '../components/user/Bus.vue'
+import Pesawat from '../components/user/Pesawat.vue'
 import Transaction from '../components/user/Transaction.vue'
 
 
@@ -32,6 +34,22 @@ const routes = [
     path: '/kereta',
     name: 'kereta',
     components: { default: Kereta, header: Navbar, footer: Footer},
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/bus',
+    name: 'bus',
+    components: { default: Bus, header: Navbar, footer: Footer},
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/pesawat',
+    name: 'pesawat',
+    components: { default: Pesawat, header: Navbar, footer: Footer},
     meta: {
       requiresAuth: true
     }

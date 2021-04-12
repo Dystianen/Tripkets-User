@@ -100,19 +100,19 @@
           <div class="col-12 mt-3">
             <b-form-input
               type="text"
-              v-on:keyup.enter="searching"
-              v-model="stasiun_keberangkatan"
+              v-model="p_depart"
               placeholder="Stasiun Keberangkatan..."
               style="width: 300px;"
             ></b-form-input>
             <b-form-input
               type="text"
-              v-on:keyup.enter="searching"
-              v-model="stasiun_tujuan"
+              v-model="p_till"
               placeholder="Stasiun Tujuan..."
               class="mt-3"
               style="width: 300px;"
             ></b-form-input>
+            <br>
+            <button @click="searching" class="btn btn-outline-success" type="submit">Search</button>
             <br />
 
           </div>
@@ -345,11 +345,11 @@ export default {
       let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
       let form = {
-        stasiunkeberangkatan: this.stasiun_keberangkatan,
-        stasiuntujuan: this.stasiun_tujuan,
+        pdepart: this.p_depart,
+        ptill: this.p_till,
       };
       this.axios
-        .post("/findTransportation/" + this.perPage + "/" + offset, form, conf)
+        .post("/findTrain/" + this.perPage + "/" + offset, form, conf)
         .then((response) => {
           if (response.data.status == 1) {
             this.$bvToast.hide("loadingToast");

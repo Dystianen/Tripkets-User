@@ -20,6 +20,9 @@
                 <template v-slot:cell(transportation_type)="data">
                   {{ data.item.category.transportation_type }}
                 </template>
+                <!-- <template v-slot:cell(place depart)="data">
+                  {{ data.item.transportations.p_depart }}
+                </template> -->
               </b-table>
               <b-pagination
                 v-model="currentPage"
@@ -110,6 +113,8 @@ module.exports = {
       transportation_type: "",
       id_transportation: "",
       transportation_name: "",
+      p_depart: "",
+      p_till: "",
       price: "",
       departure: "",
       jumlah: "",
@@ -129,8 +134,8 @@ module.exports = {
         // "id_transportation",
         // "transportation_type",
         "transportation_name",
-        "stasiun_keberangkatan",
-        "stasiun_tujuan",
+        "p_depart",
+        "p_till",
         "price",
         "departure",
         "till",
@@ -144,7 +149,7 @@ module.exports = {
       let conf = { headers: { Authorization: "Bearer " + this.key } };
       this.$bvToast.show("loadingToast");
       this.axios
-        .get("/transportation", conf)
+        .get("/train", conf)
         .then((response) => {
           if (response.data.status) {
             this.$bvToast.hide("loadingToast");
@@ -153,7 +158,7 @@ module.exports = {
             this.rows = response.data.data.count;
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data petugas.";
+            this.message = "Gagal menampilkan data kereta";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -167,7 +172,7 @@ module.exports = {
       // let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
       this.axios
-        .get("/transaction", conf)
+        .get("/train", conf)
         .then((response) => {
           if (response.data.status) {
             this.$bvToast.hide("loadingToast");
@@ -175,7 +180,7 @@ module.exports = {
             this.rows = response.data.data.count;
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data petugas.";
+            this.message = "Gagal menampilkan data kereta.";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -192,7 +197,6 @@ module.exports = {
       this.id_user = "";
       this.jumlah = "";
       this.check_in = "";
-      // this.check_out = "";
       this.status = "";
     },
     Save: function () {
@@ -206,7 +210,6 @@ module.exports = {
         form.append("id_category", this.id_category);
         form.append("jumlah", this.jumlah);
         form.append("check_in", this.check_in);
-        // form.append("check_out", this.check_out);
         form.append("status", this.status);
 
         this.axios
