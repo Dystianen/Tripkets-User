@@ -1,205 +1,215 @@
 <template>
-  <div class="container mt-3">
-    <div class="row">
-      <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <p class="card-title float-left"><b>Riwayat Transaksi</b></p>
-            <div class="table-responsive">
-              <b-table striped hover :items="transactions" :fields="fields">
-                <template v-slot:cell(action)="data">
-                  <b-button
-                    size="sm"
-                    variant="success"
-                    @click="generateReport(data.item.id)"
-                    ><i class="mdi mdi-file-document btn-icon-prepend"></i>
-                    Ticket</b-button
-                  >&ensp; <br />
-                  <br />
-                  <b-button
-                    size="sm"
-                    variant="danger"
-                    v-on:click="Drop(data.item.id)"
-                    class="mdi mdi-cancel"
+  <div class="">
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <p class="card-title float-left"><b>Riwayat Transaksi</b></p>
+              <div class="table-responsive">
+                <b-table striped hover :items="transactions" :fields="fields">
+                  <template v-slot:cell(action)="data">
+                    <b-button
+                      size="sm"
+                      variant="success"
+                      @click="generateReport(data.item.id)"
+                      ><i class="mdi mdi-file-document btn-icon-prepend"></i>
+                      Ticket</b-button
+                    >&ensp; <br />
+                    <br />
+                    <b-button
+                      size="sm"
+                      variant="danger"
+                      v-on:click="Drop(data.item.id)"
+                      class="mdi mdi-cancel"
+                    >
+                      Cancel</b-button
+                    >
+                  </template>
+                  <template v-slot:cell(price)="data">
+                    {{ data.item.transportation.price }}
+                  </template>
+                  <template v-slot:cell(name)="data">
+                    {{ data.item.user.name }}
+                  </template>
+                  <template v-slot:cell(transportation)="data">
+                    {{ data.item.transportation.transportation_name }}
+                  </template>
+                  <template v-slot:cell(keberangkatan)="data">
+                    {{ data.item.transportation.p_depart }}
+                  </template>
+                  <template v-slot:cell(tujuan)="data">
+                    {{ data.item.transportation.p_till }}
+                  </template>
+                  <template v-slot:cell(departure)="data">
+                    {{ data.item.transportation.departure }}
+                  </template>
+                  <template v-slot:cell(till)="data">
+                    {{ data.item.transportation.till }}
+                  </template>
+                  <template v-slot:cell(status)="data">
+                    <b-badge
+                      variant="warning"
+                      style="text-transform: uppercase"
+                      >{{ data.item.status }}</b-badge
+                    >
+                  </template>
+                </b-table>
+                <div>
+                  <vue-html2pdf
+                    :show-layout="false"
+                    :float-layout="true"
+                    :enable-download="false"
+                    :preview-modal="true"
+                    :paginate-elements-by-height="1400"
+                    filename="E-TICKET"
+                    :pdf-quality="1"
+                    :manual-pagination="false"
+                    pdf-format="a3"
+                    pdf-orientation="landscape"
+                    pdf-content-width="1400px"
+                    @progress="onProgress($event)"
+                    @hasStartedGeneration="hasStartedGeneration()"
+                    @hasGenerated="hasGenerated($event)"
+                    ref="html2Pdf"
                   >
-                    Cancel</b-button
-                  >
-                </template>
-                <template v-slot:cell(price)="data">
-                  {{ data.item.transportation.price }}
-                </template>
-                <template v-slot:cell(name)="data">
-                  {{ data.item.user.name }}
-                </template>
-                <template v-slot:cell(transportation)="data">
-                  {{ data.item.transportation.transportation_name }}
-                </template>
-                <template v-slot:cell(keberangkatan)="data">
-                  {{ data.item.transportation.p_depart }}
-                </template>
-                <template v-slot:cell(tujuan)="data">
-                  {{ data.item.transportation.p_till }}
-                </template>
-                <template v-slot:cell(departure)="data">
-                  {{ data.item.transportation.departure }}
-                </template>
-                <template v-slot:cell(till)="data">
-                  {{ data.item.transportation.till }}
-                </template>
-                <template v-slot:cell(status)="data">
-                  <b-badge
-                    variant="warning"
-                    style="text-transform: uppercase"
-                    >{{ data.item.status }}</b-badge
-                  >
-                </template>
-              </b-table>
-              <div>
-                <vue-html2pdf
-                  :show-layout="false"
-                  :float-layout="true"
-                  :enable-download="false"
-                  :preview-modal="true"
-                  :paginate-elements-by-height="1400"
-                  filename="E-TICKET"
-                  :pdf-quality="1"
-                  :manual-pagination="false"
-                  pdf-format="a3"
-                  pdf-orientation="landscape"
-                  pdf-content-width="1400px"
-                  @progress="onProgress($event)"
-                  @hasStartedGeneration="hasStartedGeneration()"
-                  @hasGenerated="hasGenerated($event)"
-                  ref="html2Pdf"
+                    <section slot="pdf-content">
+                      <div class="invoice-box">
+                        <table>
+                          <tr class="top">
+                            <td colspan="2">
+                              <table>
+                                <tr>
+                                  <td class="title">
+                                    <img
+                                      src="../../../public/logo.png"
+                                      alt="Company logo"
+                                      style="width: 100%; max-width: 500px"
+                                    />
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+
+                          <tr class="information">
+                            <td colspan="2">
+                              <table>
+                                <tr>
+                                  <td>
+                                    Invoice # :
+                                    {{ tiketT.transportation_name }}<br />
+                                    Check In : {{ tiket.check_in | format }}<br />
+                                    Departure : {{ tiketT.departure }}<br />
+                                    Till : {{ tiketT.till }}<br />
+                                  </td>
+
+                                  <td>
+                                    Name : {{ tiketU.name }}<br />
+                                    Email : {{ tiketU.email }} <br />
+                                    Phone : {{ tiketU.phone_number }}<br/>
+                                    Type : {{tiketT.transportation_type}}
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+
+                          <tr class="heading">
+                            <td>Payment Method</td>
+
+                            <td>Check #</td>
+                          </tr>
+
+                          <tr class="details">
+                            <td>Harga</td>
+                            <td>{{ tiketT.price }}</td>
+                          </tr>
+
+                          <tr class="details">
+                            <td>Jumlah Penumpang</td>
+                            <td>{{ tiket.jumlah }}</td>
+                          </tr>
+
+                          <tr class="heading">
+                            <td>Item</td>
+
+                            <td>#</td>
+                          </tr>
+
+                          <tr class="item">
+                            <td>Transportation Name</td>
+
+                            <td>{{ tiketT.transportation_name }}</td>
+                          </tr>
+
+                          <tr class="item">
+                            <td>Stasiun Keberangkatan</td>
+
+                            <td>{{ tiketT.p_depart }}</td>
+                          </tr>
+
+                          <tr class="item">
+                            <td>Stasiun Tujuan</td>
+
+                            <td>{{ tiketT.p_till }}</td>
+                          </tr>
+
+                          <tr class="item last">
+                            <td>Status</td>
+
+                            <td>{{ tiket.status }}</td>
+                          </tr>
+
+                          <tr class="total">
+                            <td></td>
+
+                            <td>Total: {{ tiketT.price }}</td>
+                          </tr>
+                          <barcode
+                            v-bind:value="barcodeValue"
+                            class="height: 50px;"
+                          >
+                            <!-- Show this if the rendering fails. -->
+                          </barcode>
+                        </table>
+                      </div>
+                    </section>
+                  </vue-html2pdf>
+                </div>
+                <b-pagination
+                  v-model="currentPage"
+                  :per-page="perPage"
+                  :total-rows="rows"
+                  align="center"
+                  v-on:input="pagination"
                 >
-                  <section slot="pdf-content">
-                    <div class="invoice-box">
-                      <table>
-                        <tr class="top">
-                          <td colspan="2">
-                            <table>
-                              <tr>
-                                <td class="title">
-                                  <img
-                                    src="../../../public/logo.png"
-                                    alt="Company logo"
-                                    style="width: 100%; max-width: 500px"
-                                  />
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
+                </b-pagination>
 
-                        <tr class="information">
-                          <td colspan="2">
-                            <table>
-                              <tr>
-                                <td>
-                                  Invoice # :
-                                  {{ tiketT.transportation_name }}<br />
-                                  Check In : {{ tiket.check_in | format }}<br />
-                                  Departure : {{ tiketT.departure }}<br />
-                                  Till : {{ tiketT.till }}<br />
-                                </td>
+                <b-toast id="loadingToast" title="Processing Data" no-auto-hide>
+                  <b-spinner label="Spinning" variant="secondary"></b-spinner>
+                  <strong class="text-secondary"> Loading...</strong>
+                </b-toast>
 
-                                <td>
-                                  Name : {{ tiketU.name }}<br />
-                                  Email : {{ tiketU.email }} <br />
-                                  Phone : {{ tiketU.phone_number }}<br/>
-                                  Type : {{tiketT.transportation_type}}
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-
-                        <tr class="heading">
-                          <td>Payment Method</td>
-
-                          <td>Check #</td>
-                        </tr>
-
-                        <tr class="details">
-                          <td>Harga</td>
-                          <td>{{ tiketT.price }}</td>
-                        </tr>
-
-                        <tr class="details">
-                          <td>Jumlah Penumpang</td>
-                          <td>{{ tiket.jumlah }}</td>
-                        </tr>
-
-                        <tr class="heading">
-                          <td>Item</td>
-
-                          <td>#</td>
-                        </tr>
-
-                        <tr class="item">
-                          <td>Transportation Name</td>
-
-                          <td>{{ tiketT.transportation_name }}</td>
-                        </tr>
-
-                        <tr class="item">
-                          <td>Stasiun Keberangkatan</td>
-
-                          <td>{{ tiketT.p_depart }}</td>
-                        </tr>
-
-                        <tr class="item">
-                          <td>Stasiun Tujuan</td>
-
-                          <td>{{ tiketT.p_till }}</td>
-                        </tr>
-
-                        <tr class="item last">
-                          <td>Status</td>
-
-                          <td>{{ tiket.status }}</td>
-                        </tr>
-
-                        <tr class="total">
-                          <td></td>
-
-                          <td>Total: {{ tiketT.price }}</td>
-                        </tr>
-                        <barcode
-                          v-bind:value="barcodeValue"
-                          class="height: 50px;"
-                        >
-                          <!-- Show this if the rendering fails. -->
-                        </barcode>
-                      </table>
-                    </div>
-                  </section>
-                </vue-html2pdf>
+                <!-- toast untuk tampilan message box -->
+                <b-toast id="message" title="Message">
+                  <strong class="text-success">{{ message }}</strong>
+                </b-toast>
               </div>
-              <b-pagination
-                v-model="currentPage"
-                :per-page="perPage"
-                :total-rows="rows"
-                align="center"
-                v-on:input="pagination"
-              >
-              </b-pagination>
-
-              <b-toast id="loadingToast" title="Processing Data" no-auto-hide>
-                <b-spinner label="Spinning" variant="secondary"></b-spinner>
-                <strong class="text-secondary"> Loading...</strong>
-              </b-toast>
-
-              <!-- toast untuk tampilan message box -->
-              <b-toast id="message" title="Message">
-                <strong class="text-success">{{ message }}</strong>
-              </b-toast>
             </div>
           </div>
         </div>
       </div>
     </div>
-
+    
+    <!-- SVG footer -->
+    <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#007bff"
+        fill-opacity="1"
+        d="M0,192L60,197.3C120,203,240,213,360,192C480,171,600,117,720,122.7C840,128,960,192,1080,213.3C1200,235,1320,213,1380,202.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+      ></path>
+    </svg>
   </div>
 </template>
 <script>
