@@ -31,6 +31,18 @@ Vue.filter('format', function(value) {
   }
 })
 
+import VueCurrencyFilter from 'vue-currency-filter'
+
+Vue.use(VueCurrencyFilter,
+  {
+    symbol : 'Rp.',
+    thousandsSeparator: '.',
+    fractionCount: 0,
+    fractionSeparator: ',',
+    symbolPosition: 'front',
+    symbolSpacing: true
+  })
+
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
 Vue.use(VueAxios, axios)
@@ -42,27 +54,29 @@ new Vue({
   router,
   store,
   methods: {
-    isAuthenticate : function(){
-      if(localStorage.getItem("Authorization")){
-        let conf = { headers : {"Authorization" : "Bearer " + localStorage.getItem("Authorization")} };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("Authorization")
-
-        axios.get("/login/check", conf)
-        .then(response => {
-          if(response.data.status){
-            this.$store.commit('userDetail', response.data.data)
-          } else {
-            this.$store.commit('logout')
-            router.push('/login') 
-          }
-        })
-        .catch(error => {
-          this.$store.commit(error,'logout')
-        });
+    isAuthenticate: function () {
+      if (localStorage.getItem("Authorization")) {
+        let conf = { headers: { "Authorization": "Bearer " + localStorage.getItem("Authorization") } };
+        this.axios.get("/login/check", conf)
+          .then(response => {
+            if (response.data.status == false) {
+              this.$store.commit('logout')
+              router.push('login')
+            } else {
+              this.$store.commit('userDetail', response.data.data.user)
+            }
+          })
+          .catch(error => {
+            // console.log(error)
+            this.$store.commit(error, 'logout')
+          });
       } else {
         this.$store.commit('logout')
       }
     },
+  },
+  mounted() {
+    this.isAuthenticate()
   },
   render: h => h(App)
 }).$mount('#app')

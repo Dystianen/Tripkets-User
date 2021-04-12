@@ -35,10 +35,10 @@
                   {{ data.item.transportation.transportation_name }}
                 </template>
                 <template v-slot:cell(keberangkatan)="data">
-                  {{ data.item.transportation.stasiun_keberangkatan }}
+                  {{ data.item.transportation.p_depart }}
                 </template>
                 <template v-slot:cell(tujuan)="data">
-                  {{ data.item.transportation.stasiun_tujuan }}
+                  {{ data.item.transportation.p_till }}
                 </template>
                 <template v-slot:cell(departure)="data">
                   {{ data.item.transportation.departure }}
@@ -106,7 +106,8 @@
                                 <td>
                                   Name : {{ tiketU.name }}<br />
                                   Email : {{ tiketU.email }} <br />
-                                  Phone : {{ tiketU.phone_number }}
+                                  Phone : {{ tiketU.phone_number }}<br/>
+                                  Type : {{tiketT.transportation_type}}
                                 </td>
                               </tr>
                             </table>
@@ -144,13 +145,13 @@
                         <tr class="item">
                           <td>Stasiun Keberangkatan</td>
 
-                          <td>{{ tiketT.stasiun_keberangkatan }}</td>
+                          <td>{{ tiketT.p_depart }}</td>
                         </tr>
 
                         <tr class="item">
                           <td>Stasiun Tujuan</td>
 
-                          <td>{{ tiketT.stasiun_tujuan }}</td>
+                          <td>{{ tiketT.p_till }}</td>
                         </tr>
 
                         <tr class="item last">
@@ -198,6 +199,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -360,11 +362,11 @@ body a {
   margin: 0;
   padding: 30px;
   border: 1px solid #eee;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   font-size: 16px;
   line-height: 24px;
   font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-  color: #555;
+  color: rgb(0, 0, 0);
 }
 
 .invoice-box table {
@@ -401,7 +403,7 @@ body a {
 }
 
 .invoice-box table tr.heading td {
-  background: brown;
+  background-color: brown;
   border-bottom: 1px solid #ddd;
   font-weight: bold;
   color: #fff;

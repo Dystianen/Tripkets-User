@@ -19,11 +19,11 @@
                   <span class="menu-title">Beranda</span>
                 </router-link>
               </li>
-              <li class="nav-item"> 
+              <!-- <li class="nav-item"> 
                 <router-link :to="{ name: 'hotel' }" class="nav-link">
                   <span class="menu-title">Hotel</span>
                 </router-link>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <router-link :to="{ name: 'pesawat' }" class="nav-link">
                   <span class="menu-title">Pesawat</span>

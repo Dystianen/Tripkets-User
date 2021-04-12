@@ -1,11 +1,12 @@
 <template>
-  <div class="container mt-3">
+  <div class="">
+    <div class="container mt-3 p-0">
+      <!-- List Train Start -->
     <div class="row">
       <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
             <p class="card-title float-left"><b>Jadwal Kereta</b></p>
-
             <div class="table-responsive">
               <b-table striped hover :items="transportations" :fields="fields">
                 <template v-slot:cell(action)="data">
@@ -20,9 +21,6 @@
                 <template v-slot:cell(transportation_type)="data">
                   {{ data.item.category.transportation_type }}
                 </template>
-                <!-- <template v-slot:cell(place depart)="data">
-                  {{ data.item.transportations.p_depart }}
-                </template> -->
               </b-table>
               <b-pagination
                 v-model="currentPage"
@@ -47,6 +45,51 @@
         </div>
       </div>
     </div>
+    <!-- List Train End -->
+
+    <!-- Custom List Start-->
+    <!-- <b-container class="mt-5"  >
+      <b-row class="shadow" :items="data">
+        <b-col class="m-auto text-center">
+          <h6>Transportation Name</h6>
+          <legend class="text-primary">
+            {{ transportations[0].transportation_name }}
+          </legend>
+        </b-col>
+        <div class="garis_vertikal"></div>
+        <b-col class="my-4 text-center">
+          <div class="b-col p-0">
+            <h6>Departure</h6>
+            <legend class="text-warning">
+              {{ transportations[0].p_depart }}
+            </legend>
+            <legend class="text-dark">{{ transportations[0].departure }}</legend>
+          </div>
+        </b-col>
+        <div class="garis_vertikal"></div>
+        <b-col class="my-4 text-center">
+          <div class="b-col p-0">
+            <h6>Till</h6>
+            <legend class="text-warning">
+              {{ transportations[0].p_till }}
+            </legend>
+            <legend class="text-dark">{{ transportations[0].till }}</legend>
+          </div>
+        </b-col>
+        <div class="garis_vertikal"></div>
+        <b-col cols="auto" class="m-auto text-center">
+          <legend class="text-primary">
+            {{ transportations[0].price | currency }}
+          </legend>
+          <b-button pill variant="success" size="lg" @click="Order(data.item)" v-b-modal.modalOrder>Order</b-button>
+        </b-col>
+      </b-row>
+    </b-container> -->
+    
+
+    <!-- Custom List End -->
+
+    <!-- Modal Order Start -->
     <b-modal id="modalOrder" @ok="Save">
       <template v-slot:modal-title> Form Order </template>
       <form ref="form">
@@ -63,7 +106,7 @@
           />
         </div>
         <div class="form-group">
-          <!-- <label for="id_transportation" class="col-form-label">Id Transportation</label> -->
+          <!-- <label for="id_transportation" class="col-form-label">Id Category</label> -->
           <input
             type="numeric"
             name="id_category"
@@ -100,6 +143,18 @@
         </div>
       </form>
     </b-modal>
+    <!-- Modal Order End -->
+    </div>
+
+    <!-- Wave Footer Satrt -->
+    <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#007bff"
+        fill-opacity="1"
+        d="M0,192L60,197.3C120,203,240,213,360,192C480,171,600,117,720,122.7C840,128,960,192,1080,213.3C1200,235,1320,213,1380,202.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+      ></path>
+    </svg>
+    <!-- Wave Footer End -->
   </div>
 </template>
 
@@ -113,8 +168,6 @@ module.exports = {
       transportation_type: "",
       id_transportation: "",
       transportation_name: "",
-      p_depart: "",
-      p_till: "",
       price: "",
       departure: "",
       jumlah: "",
@@ -132,14 +185,14 @@ module.exports = {
       user: "",
       fields: [
         // "id_transportation",
-        // "transportation_type",
+        "transportation_type",
         "transportation_name",
         "p_depart",
         "p_till",
         "price",
         "departure",
         "till",
-        // "action",
+        "action",
       ],
     };
   },
@@ -156,9 +209,10 @@ module.exports = {
             this.transportations = response.data.data.transportations;
             this.category = response.data.data.transportations.category;
             this.rows = response.data.data.count;
+            console.log(this.transportations);
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data kereta";
+            this.message = "Gagal menampilkan data petugas.";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -172,7 +226,7 @@ module.exports = {
       // let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
       this.axios
-        .get("/train", conf)
+        .get("/transaction", conf)
         .then((response) => {
           if (response.data.status) {
             this.$bvToast.hide("loadingToast");
@@ -180,7 +234,7 @@ module.exports = {
             this.rows = response.data.data.count;
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data kereta.";
+            this.message = "Gagal menampilkan data petugas.";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -197,34 +251,36 @@ module.exports = {
       this.id_user = "";
       this.jumlah = "";
       this.check_in = "";
+      // this.check_out = "";
       this.status = "";
     },
     Save: function () {
       let conf = { headers: { Authorization: "Bearer " + this.key } };
       this.$bvToast.show("loadingToast");
-      this.action === "insert" 
-        let form = new FormData();
-        // form.append("id", this.id);
-        form.append("id", this.id);
-        form.append("id_transportation", this.id_transportation);
-        form.append("id_category", this.id_category);
-        form.append("jumlah", this.jumlah);
-        form.append("check_in", this.check_in);
-        form.append("status", this.status);
+      this.action === "insert";
+      let form = new FormData();
+      // form.append("id", this.id);
+      form.append("id", this.id);
+      form.append("id_transportation", this.id_transportation);
+      form.append("id_category", this.id_category);
+      form.append("jumlah", this.jumlah);
+      form.append("check_in", this.check_in);
+      // form.append("check_out", this.check_out);
+      form.append("status", this.status);
 
-        this.axios
-          .post("/transaction", form, conf)
-          .then((response) => {
-            this.$bvToast.hide("loadingToast");
-            this.$router.push("/transaksi");
-            this.message = response.data.message;
-            this.$bvToast.show("message");
-            this.getOrder();
-            console.log(this.id_transportation);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      this.axios
+        .post("/transaction", form, conf)
+        .then((response) => {
+          this.$bvToast.hide("loadingToast");
+          this.$router.push("/transaksi");
+          this.message = response.data.message;
+          this.$bvToast.show("message");
+          this.getOrder();
+          console.log(this.id_transportation);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {
