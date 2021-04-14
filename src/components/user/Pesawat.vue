@@ -5,9 +5,15 @@
         <div class="col-lg-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <p class="card-title float-left"><b>Jadwal Kereta</b></p>
+              <p class="card-title text-center"><b>Jadwal Pesawat</b></p>
+              <hr class="mt-5" style="height: 2px" />
               <div class="table-responsive">
-                <b-table striped hover :items="transportations" :fields="fields">
+                <b-table
+                  striped
+                  hover
+                  :items="transportations"
+                  :fields="fields"
+                >
                   <template v-slot:cell(action)="data">
                     <b-button
                       size="sm"
@@ -20,9 +26,16 @@
                   <template v-slot:cell(transportation_type)="data">
                     {{ data.item.category.transportation_type }}
                   </template>
-                  <!-- <template v-slot:cell(place depart)="data">
-                    {{ data.item.transportations.p_depart }}
-                  </template> -->
+
+                  <template v-slot:cell(price)="data">
+                    {{ data.item.price | currency }}
+                  </template>
+                  <template v-slot:cell(train_image)="data">
+                    <img
+                      style="width: 200px; height: 100px; border-radius: 5%"
+                      :src="'http://localhost:8000/uploads/' + data.item.image"
+                    />
+                  </template>
                 </b-table>
                 <b-pagination
                   v-model="currentPage"
@@ -110,7 +123,6 @@
         d="M0,192L60,197.3C120,203,240,213,360,192C480,171,600,117,720,122.7C840,128,960,192,1080,213.3C1200,235,1320,213,1380,202.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
       ></path>
     </svg>
-
   </div>
 </template>
 
@@ -143,7 +155,7 @@ module.exports = {
       user: "",
       fields: [
         // "id_transportation",
-        "transportation_type",
+        "train_image",
         "transportation_name",
         "p_depart",
         "p_till",
@@ -158,6 +170,7 @@ module.exports = {
   methods: {
     getData: function () {
       let conf = { headers: { Authorization: "Bearer " + this.key } };
+      // let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
       this.axios
         .get("/plane", conf)
@@ -180,7 +193,6 @@ module.exports = {
     },
     getOrder: function () {
       let conf = { headers: { Authorization: "Bearer " + this.key } };
-      // let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
       this.axios
         .get("/plane", conf)
@@ -213,29 +225,29 @@ module.exports = {
     Save: function () {
       let conf = { headers: { Authorization: "Bearer " + this.key } };
       this.$bvToast.show("loadingToast");
-      this.action === "insert" 
-        let form = new FormData();
-        // form.append("id", this.id);
-        form.append("id", this.id);
-        form.append("id_transportation", this.id_transportation);
-        form.append("id_category", this.id_category);
-        form.append("jumlah", this.jumlah);
-        form.append("check_in", this.check_in);
-        form.append("status", this.status);
+      this.action === "insert";
+      let form = new FormData();
+      // form.append("id", this.id);
+      form.append("id", this.id);
+      form.append("id_transportation", this.id_transportation);
+      form.append("id_category", this.id_category);
+      form.append("jumlah", this.jumlah);
+      form.append("check_in", this.check_in);
+      form.append("status", this.status);
 
-        this.axios
-          .post("/transaction", form, conf)
-          .then((response) => {
-            this.$bvToast.hide("loadingToast");
-            this.$router.push("/transaksi");
-            this.message = response.data.message;
-            this.$bvToast.show("message");
-            this.getOrder();
-            console.log(this.id_transportation);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      this.axios
+        .post("/transaction", form, conf)
+        .then((response) => {
+          this.$bvToast.hide("loadingToast");
+          this.$router.push("/transaksi");
+          this.message = response.data.message;
+          this.$bvToast.show("message");
+          this.getOrder();
+          console.log(this.id_transportation);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {

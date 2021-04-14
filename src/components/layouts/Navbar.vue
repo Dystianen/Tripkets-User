@@ -35,10 +35,7 @@
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link
-                  :to="{ name: 'bus' }"
-                  class="nav-link"
-                >
+                <router-link :to="{ name: 'bus' }" class="nav-link">
                   <span class="menu-title">Bus</span>
                 </router-link>
               </li>

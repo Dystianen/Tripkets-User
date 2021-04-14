@@ -46,25 +46,51 @@
         </div>
         <div class="col m-3 p-auto m-0">
           <form class="row me-0" @submit.prevent="searching">
+            <div class="col-md-6 pe-0">
+              <label for="p_depart" class="form-label">Keberangkatan</label>
+              <b-form-select v-model="p_depart" class="mb-3" placeholder="stasiun keberangkatan">
+                <b-form-select-option value="jakarta">Jakarta</b-form-select-option>
+                <b-form-select-option value="bekasi">Bekasi</b-form-select-option>
+                <b-form-select-option value="bandung">Bandung</b-form-select-option>
+                <b-form-select-option value="solo">Solo</b-form-select-option>
+                <b-form-select-option value="ngawi">Ngawi</b-form-select-option>
+                <b-form-select-option value="ngawi">Madiun</b-form-select-option>
+                <b-form-select-option value="kertosono">Kertosono</b-form-select-option>
+                <b-form-select-option value="nganjuk">Nganjuk</b-form-select-option>
+                <b-form-select-option value="malang">Malang</b-form-select-option>
+              </b-form-select>
+            </div>
+            <div class="col-md-6">
+              <label for="p_till" class="form-label">Tujuan</label>
+              <b-form-select v-model="p_till" class="mb-3" placeholder="stasiun tujuan">
+                <b-form-select-option value="jakarta">Jakarta</b-form-select-option>
+                <b-form-select-option value="bekasi">Bekasi</b-form-select-option>
+                <b-form-select-option value="bandung">Bandung</b-form-select-option>
+                <b-form-select-option value="solo">Solo</b-form-select-option>
+                <b-form-select-option value="ngawi">Ngawi</b-form-select-option>
+                <b-form-select-option value="ngawi">Madiun</b-form-select-option>
+                <b-form-select-option value="kertosono">Kertosono</b-form-select-option>
+                <b-form-select-option value="nganjuk">Nganjuk</b-form-select-option>
+                <b-form-select-option value="malang">Malang</b-form-select-option>
+              </b-form-select>
+            </div>
+            <div class="row ml-1">
+              <div class="col-md-12 pe-0">
+                <label for="departure" class="form-label">Tanggal Keberangkatan</label>
+                <input
+                  class="form-control"
+                  type="date"
+                  name="departure"
+                  id="departure"
+                  v-model="departure"
+                />
+              </div>
+            </div>
+
             <div class="col-12 mt-3">
-              <b-form-input
-                type="text"
-                v-model="p_depart"
-                placeholder="Stasiun Keberangkatan..."
-                style="width: 300px"
-              ></b-form-input>
-              <b-form-input
-                type="text"
-                v-model="p_till"
-                placeholder="Stasiun Tujuan..."
-                class="mt-1"
-                style="width: 300px"
-              ></b-form-input>
-              <br />
-              <button class="btn btn-outline-primary" type="submit">
-                Search
+              <button type="submit" class="btn btn-primary rounded">
+                Cari ...
               </button>
-              <br />
             </div>
           </form>
         </div>
@@ -125,6 +151,7 @@
     </div>
     <div class="container mt-5 shadow rounded p-0">
       <span v-if="findtransportations.length">
+      <p class="card-title float-left ml-5 mt-4"><b>Jadwal Transportasi</b></p>
         <b-table
           class="mt-5"
           striped
@@ -138,11 +165,15 @@
               variant="success"
               v-on:click="Order(data.item)"
               v-b-modal.modalOrder
-              ><i class="mdi mdi-train"></i> Order</b-button
+              rounded
+              > Order</b-button
             >
           </template>
           <template v-slot:cell(transportation_type)="data">
             {{ data.item.category.transportation_type }}
+          </template>
+          <template v-slot:cell(price)="data">
+            {{ data.item.price | currency }}
           </template>
         </b-table>
         <b-pagination
@@ -359,7 +390,6 @@
         d="M0,192L60,197.3C120,203,240,213,360,192C480,171,600,117,720,122.7C840,128,960,192,1080,213.3C1200,235,1320,213,1380,202.7L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
       ></path>
     </svg>
-
   </div>
 </template>
 
@@ -418,7 +448,7 @@ export default {
             this.rows = response.data.data.count;
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data petugas.";
+            this.message = "Gagal menampilkan data transportasi.";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -440,7 +470,7 @@ export default {
             this.rows = response.data.data.count;
           } else {
             this.$bvToast.hide("loadingToast");
-            this.message = "Gagal menampilkan data petugas.";
+            this.message = "Gagal menampilkan data.";
             this.$bvToast.show("message");
             this.$router.push({ name: "login" });
           }
@@ -455,7 +485,8 @@ export default {
       this.$bvToast.show("loadingToast");
       let form = {
         pdepart: this.p_depart,
-        p_till: this.p_till,
+        ptill: this.p_till,
+        tgl: this.departure,
       };
       this.axios
         .post("/findTrain/" + this.perPage + "/" + offset, form, conf)

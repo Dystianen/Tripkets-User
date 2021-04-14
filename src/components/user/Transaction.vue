@@ -27,7 +27,7 @@
                     >
                   </template>
                   <template v-slot:cell(price)="data">
-                    {{ data.item.transportation.price }}
+                    {{ data.item.transportation.price | currency }}
                   </template>
                   <template v-slot:cell(name)="data">
                     {{ data.item.user.name }}
@@ -47,6 +47,7 @@
                   <template v-slot:cell(till)="data">
                     {{ data.item.transportation.till }}
                   </template>
+
                   <template v-slot:cell(status)="data">
                     <b-badge
                       variant="warning"
@@ -99,7 +100,8 @@
                                   <td>
                                     Invoice # :
                                     {{ tiketT.transportation_name }}<br />
-                                    Check In : {{ tiket.check_in | format }}<br />
+                                    Check In : {{ tiket.check_in | format
+                                    }}<br />
                                     Departure : {{ tiketT.departure }}<br />
                                     Till : {{ tiketT.till }}<br />
                                   </td>
@@ -107,8 +109,8 @@
                                   <td>
                                     Name : {{ tiketU.name }}<br />
                                     Email : {{ tiketU.email }} <br />
-                                    Phone : {{ tiketU.phone_number }}<br/>
-                                    Type : {{tiketT.transportation_type}}
+                                    Phone : {{ tiketU.phone_number }}<br />
+                                    Type : {{ tiketT.transportation_type }}
                                   </td>
                                 </tr>
                               </table>
@@ -201,7 +203,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- SVG footer -->
     <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
       <path
@@ -272,6 +274,7 @@ export default {
         .then((response) => {
           if (response.data.status) {
             this.$bvToast.hide("loadingToast");
+            this.$bvToast.show("message");
             this.transactions = response.data.data.transactions;
             this.transportation =
               response.data.data.transactions.transportation;
